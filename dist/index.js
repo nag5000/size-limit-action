@@ -30847,10 +30847,14 @@ class Term {
     getPackageManager(directory) {
         return has_yarn_1.default(directory) ? "yarn" : has_pnpm_1.default(directory) ? "pnpm" : hasBun(directory) ? "bun" : "npm";
     }
-    execSizeLimit(branch, skipStep, buildScript, cleanScript, windowsVerbatimArguments, directory, script, packageManager, checkoutScript) {
+    execSizeLimit(branch, skipStep, buildScript, cleanScript, windowsVerbatimArguments, directory, script, packageManager, checkoutScript, jsonResultsFilePath) {
         return __awaiter(this, void 0, void 0, function* () {
             const manager = packageManager || this.getPackageManager(directory);
             let output = "";
+            if (jsonResultsFilePath) {
+                output = fs_1.default.readFileSync(jsonResultsFilePath, "utf8");
+                return { status: 0, output };
+            }
             if (branch) {
                 if (checkoutScript) {
                     yield exec_1.exec(checkoutScript.replace("{{branch}}", branch));
@@ -30953,13 +30957,15 @@ function run() {
             const script = core_1.getInput("script");
             const packageManager = core_1.getInput("package_manager");
             const checkoutScript = core_1.getInput("checkout_script");
+            const filePathCurrent = core_1.getInput("size_limit_json_file_current");
+            const filePathBase = core_1.getInput("size_limit_json_file_base");
             const directory = core_1.getInput("directory") || process.cwd();
             const windowsVerbatimArguments = core_1.getInput("windows_verbatim_arguments") === "true" ? true : false;
             const octokit = new github_1.GitHub(token);
             const term = new Term_1.default();
             const limit = new SizeLimit_1.default();
-            const { status, output } = yield term.execSizeLimit(null, skipStep, buildScript, cleanScript, windowsVerbatimArguments, directory, script, packageManager, checkoutScript);
-            const { output: baseOutput } = yield term.execSizeLimit(pr.base.ref, null, buildScript, cleanScript, windowsVerbatimArguments, directory, script, packageManager, checkoutScript);
+            const { status, output } = yield term.execSizeLimit(null, skipStep, buildScript, cleanScript, windowsVerbatimArguments, directory, script, packageManager, checkoutScript, filePathCurrent);
+            const { output: baseOutput } = yield term.execSizeLimit(pr.base.ref, null, buildScript, cleanScript, windowsVerbatimArguments, directory, script, packageManager, checkoutScript, filePathBase);
             let base;
             let current;
             try {

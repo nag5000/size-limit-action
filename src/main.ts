@@ -46,6 +46,8 @@ async function run() {
     const script = getInput("script");
     const packageManager = getInput("package_manager");
     const checkoutScript = getInput("checkout_script");
+    const filePathCurrent = getInput("size_limit_json_file_current");
+    const filePathBase = getInput("size_limit_json_file_base");
     const directory = getInput("directory") || process.cwd();
     const windowsVerbatimArguments =
       getInput("windows_verbatim_arguments") === "true" ? true : false;
@@ -62,7 +64,8 @@ async function run() {
       directory,
       script,
       packageManager,
-      checkoutScript
+      checkoutScript,
+      filePathCurrent
     );
     const { output: baseOutput } = await term.execSizeLimit(
       pr.base.ref,
@@ -73,7 +76,8 @@ async function run() {
       directory,
       script,
       packageManager,
-      checkoutScript
+      checkoutScript,
+      filePathBase
     );
 
     let base;

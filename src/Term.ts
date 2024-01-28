@@ -34,10 +34,16 @@ class Term {
     directory?: string,
     script?: string,
     packageManager?: string,
-    checkoutScript?: string
+    checkoutScript?: string,
+    jsonResultsFilePath?: string
   ): Promise<{ status: number; output: string }> {
     const manager = packageManager || this.getPackageManager(directory);
     let output = "";
+
+    if (jsonResultsFilePath) {
+      output = fs.readFileSync(jsonResultsFilePath, "utf8");
+      return { status: 0, output };
+    }
 
     if (branch) {
       if (checkoutScript) {

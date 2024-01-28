@@ -34,6 +34,12 @@ inputs:
   checkout_script:
     required: false
     description: "The script used to checkout branch. Use {{branch}} to specify the branch name."
+  size_limit_json_file_current:
+    required: false
+    description: "The path to the existing size-limit json file for current branch. If provided, the following steps will be skipped: checkout, install, build, script and clean."
+  size_limit_json_file_base:
+    required: false
+    description: "The path to the existing size-limit json file for base branch. If provided, the following steps will be skipped: checkout, install, build, script and clean."
 runs:
   using: 'node20'
   main: 'dist/index.js'
