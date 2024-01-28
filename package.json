@@ -1,5 +1,5 @@
 {
-  "name": "size-limit-action",
+  "name": "nag5000-size-limit-action",
   "version": "1.7.0",
   "private": true,
   "description": "size-limit action",
