@@ -2,9 +2,9 @@ import { exec } from "@actions/exec";
 import hasYarn from "has-yarn";
 import hasPNPM from "has-pnpm";
 
-import process from 'node:process';
-import path from 'node:path';
-import fs from 'node:fs';
+import process from 'process';
+import path from 'path';
+import fs from 'fs';
 
 function hasBun(cwd = process.cwd()) {
 	return fs.existsSync(path.resolve(cwd, 'bun.lockb'));
@@ -33,19 +33,24 @@ class Term {
     windowsVerbatimArguments?: boolean,
     directory?: string,
     script?: string,
-    packageManager?: string
+    packageManager?: string,
+    checkoutScript?: string
   ): Promise<{ status: number; output: string }> {
     const manager = packageManager || this.getPackageManager(directory);
     let output = "";
 
     if (branch) {
-      try {
-        await exec(`git fetch origin ${branch} --depth=1`);
-      } catch (error) {
-        console.log("Fetch failed", error.message);
-      }
+      if (checkoutScript) {
+        await exec(checkoutScript.replace("{{branch}}", branch));
+      } else {
+        try {
+          await exec(`git fetch origin ${branch} --depth=1`);
+        } catch (error) {
+          console.log("Fetch failed", error.message);
+        }
 
-      await exec(`git checkout -f ${branch}`);
+        await exec(`git checkout -f ${branch}`);
+      }
     }
 
     if (skipStep !== INSTALL_STEP && skipStep !== BUILD_STEP) {
