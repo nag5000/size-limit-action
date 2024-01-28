@@ -31,6 +31,9 @@ inputs:
   package_manager:
     required: false
     description: "The package manager used to run the build and install commands. If not provided, the manager will be auto detected. Example values: `yarn`, `npm`, `pnpm`, `bun`."
+  checkout_script:
+    required: false
+    description: "The script used to checkout branch. Use {{branch}} to specify the branch name."
 runs:
   using: 'node20'
   main: 'dist/index.js'
