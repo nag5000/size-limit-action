@@ -41,7 +41,8 @@ class Term {
     let output = "";
 
     if (jsonResultsFilePath) {
-      output = fs.readFileSync(jsonResultsFilePath, "utf8");
+      const filePath = directory ? path.resolve(directory, jsonResultsFilePath) : jsonResultsFilePath;
+      output = fs.readFileSync(filePath, "utf8");
       return { status: 0, output };
     }
 

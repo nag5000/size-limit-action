@@ -30852,7 +30852,8 @@ class Term {
             const manager = packageManager || this.getPackageManager(directory);
             let output = "";
             if (jsonResultsFilePath) {
-                output = fs_1.default.readFileSync(jsonResultsFilePath, "utf8");
+                const filePath = directory ? path_1.default.resolve(directory, jsonResultsFilePath) : jsonResultsFilePath;
+                output = fs_1.default.readFileSync(filePath, "utf8");
                 return { status: 0, output };
             }
             if (branch) {
